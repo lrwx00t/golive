@@ -10,7 +10,6 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
-	"time"
 
 	"github.com/fatih/color"
 	"github.com/fsnotify/fsnotify"
@@ -85,12 +84,26 @@ func main() {
 	}
 
 	// Handle SIGINT signal to gracefully shut down the application.
+	// create a context for the program to shut down gracefully
+	ctx, cancel := context.WithCancel(context.Background())
+
+	// set up a signal channel to capture interrupt and terminate signals
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
-	<-sigCh
+
+	go func() {
+		// wait for a signal
+		<-sigCh
+
+		// cancel the context to shut down the program gracefully
+		cancel()
+	}()
+
+	// Block main goroutine until the program shuts down gracefully.
+	<-ctx.Done()
+
 	log.Println("shutting down golive gracefully. Bye 👋")
-	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+
 	if err := watcher.Close(); err != nil {
 		log.Printf("failed to close watcher: %s", err)
 	}
