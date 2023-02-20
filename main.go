@@ -44,14 +44,12 @@ func main() {
 
 	log.Println("golive started 👀")
 
-	// create watcher
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatalf("failed to create watcher: %s", err)
 	}
 	defer watcher.Close()
 
-	// Start listening for events.
 	go func() {
 		wg := sync.WaitGroup{}
 		for {
@@ -83,27 +81,17 @@ func main() {
 		log.Fatalf("failed to add path to watcher: %s", err)
 	}
 
-	// Handle SIGINT signal to gracefully shut down the application.
-	// create a context for the program to shut down gracefully
 	ctx, cancel := context.WithCancel(context.Background())
-
-	// set up a signal channel to capture interrupt and terminate signals
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
 
 	go func() {
-		// wait for a signal
 		<-sigCh
-
-		// cancel the context to shut down the program gracefully
 		cancel()
 	}()
 
-	// Block main goroutine until the program shuts down gracefully.
 	<-ctx.Done()
-
 	log.Println("shutting down golive gracefully. Bye 👋")
-
 	if err := watcher.Close(); err != nil {
 		log.Printf("failed to close watcher: %s", err)
 	}
