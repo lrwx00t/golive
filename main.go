@@ -20,7 +20,6 @@ func runner(runnerOpts RunnerOpts) {
 	defer func() {
 		*runnerOpts.done <- true
 	}()
-	log.Println("started..")
 	cmd := exec.Command("go", append([]string{"run"}, runnerOpts.args...)...)
 	cmd.Dir = runnerOpts.path
 	out, err := cmd.CombinedOutput()
@@ -30,7 +29,6 @@ func runner(runnerOpts RunnerOpts) {
 		return
 	}
 	fmt.Print(color.GreenString("%s", out))
-	log.Println("finished..")
 }
 
 func main() {
@@ -46,7 +44,7 @@ func main() {
 		path: *path,
 		args: []string{*pkg},
 	}
-	log.Println("simple web server has started..")
+	log.Println("golive started 👀..")
 
 	// create watcher
 	watcher, err := fsnotify.NewWatcher()
