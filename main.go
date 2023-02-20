@@ -38,6 +38,7 @@ func main() {
 	path := flag.String("path", "", "go project path")
 	pkg := flag.String("package", ".", "go package or file name")
 	flag.Parse()
+
 	if len(*path) == 0 {
 		log.Fatalf("path cannot be empty")
 	}
@@ -86,13 +87,11 @@ func main() {
 	// Handle SIGINT signal to gracefully shut down the application.
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, os.Interrupt, syscall.SIGTERM)
-	select {
-	case <-sigCh:
-		log.Println("shutting down golive gracefully. Bye 👋")
-		_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		defer cancel()
-		if err := watcher.Close(); err != nil {
-			log.Printf("failed to close watcher: %s", err)
-		}
+	<-sigCh
+	log.Println("shutting down golive gracefully. Bye 👋")
+	_, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := watcher.Close(); err != nil {
+		log.Printf("failed to close watcher: %s", err)
 	}
 }
