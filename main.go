@@ -44,7 +44,7 @@ func main() {
 		path: *path,
 		args: []string{*pkg},
 	}
-	log.Println("golive started 👀..")
+	log.Println("golive started 👀")
 
 	// create watcher
 	watcher, err := fsnotify.NewWatcher()
@@ -58,7 +58,6 @@ func main() {
 		for {
 			select {
 			case event, ok := <-watcher.Events:
-				fmt.Println(event)
 				if !ok {
 					return
 				}
