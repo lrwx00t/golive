@@ -34,13 +34,9 @@ func runner(ctx context.Context, wg *sync.WaitGroup, runnerOpts RunnerOpts) {
 }
 
 func main() {
-	path := flag.String("path", "", "go project path")
+	path := flag.String("path", ".", "go project path")
 	pkg := flag.String("package", ".", "go package or file name")
 	flag.Parse()
-
-	if len(*path) == 0 {
-		log.Fatalf("path cannot be empty")
-	}
 
 	log.Println("golive started 👀")
 

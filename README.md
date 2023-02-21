@@ -18,4 +18,7 @@ go install github.com/lrwx00t/golive
 ```bash
 golive --path ~/src/go-dev/playground/demo
 2023/02/20 16:25:36 golive started 👀..
+
+# without any arguments, it defaults to current path
+golive
 ```
