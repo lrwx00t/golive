@@ -97,11 +97,10 @@ func runner_killer() {
 				if err != nil {
 					fmt.Printf("Error waiting for process %d to exit: %s\n", pid, err)
 				} else {
-					fmt.Printf("Killed process %d\n", pid)
+					fmt.Println(color.YellowString("Killed process %d", pid))
 				}
 			}
 		}
-		fmt.Println("pid:", pidStr)
 	}
 	runner_killer()
 }
@@ -135,7 +134,6 @@ func main() {
 				if time.Since(t).Seconds() <= 1.0 {
 					continue
 				}
-				fmt.Println(event)
 				t = time.Now()
 				wg.Add(1)
 				go runner(context.Background(), &wg, RunnerOpts{
